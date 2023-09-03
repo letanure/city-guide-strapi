@@ -44,10 +44,10 @@
       },
       "type": "text"
     },
-    "categories": {
+    "place_categories": {
       "type": "relation",
       "relation": "manyToMany",
-      "target": "api::category.category",
+      "target": "api::place-category.place-category",
       "inversedBy": "places"
     }
   }
