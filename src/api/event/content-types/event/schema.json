@@ -54,6 +54,16 @@
         }
       },
       "component": "basics.social-link"
+    },
+    "slug": {
+      "pluginOptions": {
+        "i18n": {
+          "localized": true
+        }
+      },
+      "type": "uid",
+      "targetField": "name",
+      "required": true
     }
   }
 }
