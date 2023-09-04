@@ -4,10 +4,11 @@
   "info": {
     "singularName": "event-category",
     "pluralName": "event-categories",
-    "displayName": "eventCategory"
+    "displayName": "eventCategory",
+    "description": ""
   },
   "options": {
-    "draftAndPublish": true
+    "draftAndPublish": false
   },
   "pluginOptions": {
     "i18n": {
@@ -21,13 +22,24 @@
         "i18n": {
           "localized": true
         }
-      }
+      },
+      "required": true
     },
     "events": {
       "type": "relation",
       "relation": "manyToMany",
       "target": "api::event.event",
       "mappedBy": "event_categories"
+    },
+    "slug": {
+      "pluginOptions": {
+        "i18n": {
+          "localized": true
+        }
+      },
+      "type": "uid",
+      "targetField": "name",
+      "required": true
     }
   }
 }
