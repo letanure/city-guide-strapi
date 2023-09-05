@@ -2,6 +2,23 @@
  * event controller
  */
 
-import { factories } from '@strapi/strapi'
+import { factories } from "@strapi/strapi";
 
-export default factories.createCoreController('api::event.event');
+export default factories.createCoreController(
+  "api::event.event",
+  ({ strapi }) => ({
+    async populate(ctx) {
+      console.log("Start populating events");
+
+      const options = {
+        limit: 5,
+        // order: "desc:trending",
+        ...ctx.query,
+      };
+
+      await strapi.service("api::event.event").populate(options);
+
+      ctx.send("Finished populating events");
+    },
+  })
+);
