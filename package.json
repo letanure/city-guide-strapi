@@ -20,7 +20,6 @@
     "patch-package": "^8.0.0",
     "pg": "8.11.3",
     "postinstall-postinstall": "^2.1.0",
-    "slugify": "^1.6.6",
     "strapi-plugin-entity-relationship-chart": "^4.1.0"
   },
   "author": {
