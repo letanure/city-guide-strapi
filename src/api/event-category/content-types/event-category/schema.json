@@ -25,11 +25,11 @@
       },
       "required": true
     },
-    "events": {
+    "parent_category": {
       "type": "relation",
       "relation": "manyToMany",
       "target": "api::event.event",
-      "mappedBy": "event_categories"
+      "inversedBy": "sub_category"
     },
     "slug": {
       "pluginOptions": {
