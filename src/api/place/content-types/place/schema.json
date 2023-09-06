@@ -68,14 +68,23 @@
       },
       "type": "string"
     },
+    "shortDescription": {
+      "pluginOptions": {
+        "i18n": {
+          "localized": true
+        }
+      },
+      "type": "string",
+      "required": true
+    },
     "slug": {
       "pluginOptions": {
         "i18n": {
           "localized": true
         }
       },
-      "type": "uid",
-      "targetField": "name"
+      "type": "string",
+      "required": true
     }
   }
 }
