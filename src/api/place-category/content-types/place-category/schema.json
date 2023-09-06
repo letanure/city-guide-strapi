@@ -31,18 +31,6 @@
       "target": "api::place.place",
       "mappedBy": "place_categories"
     },
-    "place_categories": {
-      "type": "relation",
-      "relation": "oneToMany",
-      "target": "api::place-category.place-category",
-      "mappedBy": "place_category"
-    },
-    "place_category": {
-      "type": "relation",
-      "relation": "manyToOne",
-      "target": "api::place-category.place-category",
-      "inversedBy": "place_categories"
-    },
     "slug": {
       "pluginOptions": {
         "i18n": {
@@ -50,8 +38,19 @@
         }
       },
       "type": "uid",
-      "targetField": "name",
       "required": true
+    },
+    "parent_categories": {
+      "type": "relation",
+      "relation": "manyToMany",
+      "target": "api::place-category.place-category",
+      "inversedBy": "sub_categories"
+    },
+    "sub_categories": {
+      "type": "relation",
+      "relation": "manyToMany",
+      "target": "api::place-category.place-category",
+      "mappedBy": "parent_categories"
     }
   }
 }
