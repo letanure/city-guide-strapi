@@ -30,6 +30,15 @@
       "relation": "oneToMany",
       "target": "api::city.city",
       "mappedBy": "state"
+    },
+    "slug": {
+      "pluginOptions": {
+        "i18n": {
+          "localized": true
+        }
+      },
+      "type": "string",
+      "required": true
     }
   }
 }
