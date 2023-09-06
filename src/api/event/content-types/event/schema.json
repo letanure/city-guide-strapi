@@ -31,12 +31,6 @@
       "target": "api::place.place",
       "mappedBy": "events"
     },
-    "event_categories": {
-      "type": "relation",
-      "relation": "manyToMany",
-      "target": "api::event-category.event-category",
-      "inversedBy": "events"
-    },
     "url": {
       "pluginOptions": {
         "i18n": {
@@ -64,6 +58,12 @@
       "type": "uid",
       "targetField": "name",
       "required": true
+    },
+    "sub_category": {
+      "type": "relation",
+      "relation": "manyToMany",
+      "target": "api::event-category.event-category",
+      "mappedBy": "parent_category"
     }
   }
 }
