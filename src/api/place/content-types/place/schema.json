@@ -50,16 +50,6 @@
       "target": "api::place-category.place-category",
       "inversedBy": "places"
     },
-    "SocialLinks": {
-      "type": "component",
-      "repeatable": true,
-      "pluginOptions": {
-        "i18n": {
-          "localized": true
-        }
-      },
-      "component": "basics.social-link"
-    },
     "site": {
       "pluginOptions": {
         "i18n": {
@@ -85,6 +75,16 @@
       },
       "type": "string",
       "required": true
+    },
+    "socialLinks": {
+      "type": "component",
+      "repeatable": true,
+      "pluginOptions": {
+        "i18n": {
+          "localized": true
+        }
+      },
+      "component": "basics.social-link"
     }
   }
 }
