@@ -26,12 +26,6 @@
       "required": true,
       "unique": false
     },
-    "state": {
-      "type": "relation",
-      "relation": "manyToOne",
-      "target": "api::state.state",
-      "inversedBy": "cities"
-    },
     "slug": {
       "pluginOptions": {
         "i18n": {
@@ -40,6 +34,12 @@
       },
       "type": "string",
       "required": true
+    },
+    "state": {
+      "type": "relation",
+      "relation": "manyToOne",
+      "target": "api::state.state",
+      "inversedBy": "cities"
     }
   }
 }
