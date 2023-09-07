@@ -179,18 +179,18 @@ export default factories.createCoreService(
           name: "Show de rock",
         });
 
-        // await createPlaceCategory({
-        //   name: "centro de exposicoes",
-        // });
+        await createPlaceCategory({
+          name: "centro de exposicoes",
+        });
 
-        // await createPlace({
-        //   name: "boteco do ze",
-        //   shortDescription: "boteco do ze desc",
-        // });
+        await createPlace({
+          name: "boteco do ze",
+          shortDescription: "boteco do ze desc",
+        });
 
-        // await createEvent({
-        //   name: "sho no boteco do ze",
-        // });
+        await createEvent({
+          name: "sho no boteco do ze",
+        });
       } catch (error) {
         console.log("populate:", Exception(error));
       }
