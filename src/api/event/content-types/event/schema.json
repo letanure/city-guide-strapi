@@ -59,11 +59,11 @@
       "targetField": "name",
       "required": true
     },
-    "sub_category": {
+    "eventCategories": {
       "type": "relation",
       "relation": "manyToMany",
       "target": "api::event-category.event-category",
-      "mappedBy": "parent_category"
+      "inversedBy": "events"
     }
   }
 }
