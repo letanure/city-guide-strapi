@@ -4,34 +4,53 @@
 import { factories } from "@strapi/strapi";
 import slugify from "slugify";
 
-const eventService = "api::event.event";
-const eventCountry = "api::country.country";
-const eventState = "api::state.state";
-const eventCity = "api::city.city";
+type ServiceOptions =
+  | "city"
+  | "country"
+  | "event"
+  | "event-category"
+  | "place"
+  | "placeCategory"
+  | "state";
 
-function Exception(e) {
-  return { e, data: e.data && e.data.errors && e.data.errors };
-}
+const getServiceEntityName = (serviceName: ServiceOptions) =>
+  `api::${serviceName}.${serviceName}`;
 
-async function getByName(name, entityService) {
+const Exception = (e) => ({
+  e,
+  data: e.data && e.data.errors && e.data.errors,
+});
+
+async function getByFilters(entityService, filters) {
   try {
     const item = await strapi.service(entityService).find({
-      filters: { name },
+      filters,
     });
 
     return item.results.length > 0 ? item.results[0] : null;
   } catch (error) {
-    console.log("getByName:", Exception(error));
+    console.log("createUnique:", Exception(error));
   }
 }
 
-async function create(entityService, dataOriginal, slugOf = null) {
+interface Create<Data> {
+  serviceName: ServiceOptions;
+  dataOriginal: Data;
+  slugOf?: keyof Data;
+}
+
+async function create({
+  serviceName,
+  dataOriginal,
+  slugOf = null,
+}: Create<typeof dataOriginal>) {
   try {
+    const serviceEntityName = getServiceEntityName(serviceName);
     const data = dataOriginal;
     if (slugOf && data[slugOf]) {
       data.slug = slugify(data[slugOf], { lower: true });
     }
-    await strapi.service(entityService).create({
+    await strapi.service(serviceEntityName).create({
       data,
     });
   } catch (error) {
@@ -45,7 +64,11 @@ type CountryData = {
 };
 
 async function createCountry(countryData: CountryData) {
-  return await create(eventCountry, countryData);
+  // return await create(entityServices.country, countryData);
+  return await create({
+    serviceName: "country",
+    dataOriginal: countryData,
+  });
 }
 
 type StateData = {
@@ -53,7 +76,11 @@ type StateData = {
 };
 
 async function createState(stateData: StateData) {
-  return await create(eventState, stateData, "name");
+  return await create({
+    serviceName: "state",
+    dataOriginal: stateData,
+    slugOf: "name",
+  });
 }
 
 type CityData = {
@@ -61,31 +88,112 @@ type CityData = {
   state?: string;
 };
 async function createCity(cityData: CityData) {
-  return await create(eventCity, cityData, "name");
+  return await create({
+    serviceName: "city",
+    dataOriginal: cityData,
+    slugOf: "name",
+  });
 }
 
-export default factories.createCoreService(eventService, ({ strapi }) => ({
-  async populate(params) {
-    try {
-      console.log("SERVICE START", eventService);
+type EventCategoryData = {
+  name: string;
+  slug?: string;
+};
+async function createEventCategory(eventCategoryData: EventCategoryData) {
+  return await create({
+    serviceName: "event-category",
+    dataOriginal: eventCategoryData,
+    slugOf: "name",
+  });
+}
 
-      await createCountry({
-        name: "Brazil",
-        slug: "br",
-      });
+type PlaceCategoryData = {
+  name: string;
+  slug?: string;
+};
+async function createPlaceCategory(placeCategoryData: PlaceCategoryData) {
+  return await create({
+    serviceName: "placeCategory",
+    dataOriginal: placeCategoryData,
+    slugOf: "name",
+  });
+}
 
-      await createState({
-        name: "Minas Gerais",
-      });
+type PlaceData = {
+  city?: string;
+  description?: string;
+  events?: string;
+  name: string;
+  placeCategories?: any;
+  shortDescription: string;
+  site?: string;
+  slug?: string;
+  socialLinks?: any;
+};
 
-      await createCity({
-        name: "Belo horizonte",
-        state: item,
-      });
+async function createPlace(placeData: PlaceData) {
+  return await create({
+    serviceName: "place",
+    dataOriginal: placeData,
+    slugOf: "name",
+  });
+}
 
-      createState;
-    } catch (error) {
-      console.log("populate:", Exception(error));
-    }
-  },
-}));
+type EventData = {
+  name: string;
+  url?: string;
+  places?: string;
+  slug?: string;
+  socialLinks?: any;
+  sub_category?: any;
+};
+async function createEvent(eventData: EventData) {
+  return await create({
+    serviceName: "event",
+    dataOriginal: eventData,
+    slugOf: "name",
+  });
+}
+
+export default factories.createCoreService(
+  "api::event.event",
+  ({ strapi }) => ({
+    async populate(params) {
+      try {
+        console.log("SERVICE START");
+
+        await createCountry({
+          name: "Brazil",
+          slug: "br",
+        });
+
+        await createState({
+          name: "Minas Gerais",
+        });
+
+        await createCity({
+          name: "Belo horizonte",
+        });
+
+        await createEventCategory({
+          name: "Show de rock",
+        });
+
+        // await createPlaceCategory({
+        //   name: "centro de exposicoes",
+        // });
+
+        // await createPlace({
+        //   name: "boteco do ze",
+        //   shortDescription: "boteco do ze desc",
+        // });
+
+        // await createEvent({
+        //   name: "sho no boteco do ze",
+        // });
+      } catch (error) {
+        console.log("populate:", Exception(error));
+      }
+    },
+  })
+);
