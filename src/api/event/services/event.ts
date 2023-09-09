@@ -2,6 +2,7 @@
  * event service
  */
 import { factories } from "@strapi/strapi";
+import { ContentType } from "@strapi/strapi/lib/types/core/uid";
 import slugify from "slugify";
 
 type ServiceOptions =
@@ -10,25 +11,24 @@ type ServiceOptions =
   | "event"
   | "event-category"
   | "place"
-  | "placeCategory"
+  | "place-category"
   | "state";
 
 const getServiceEntityName = (serviceName: ServiceOptions) =>
-  `api::${serviceName}.${serviceName}`;
+  `api::${serviceName}.${serviceName}` as ContentType;
 
 const Exception = (e) => ({
   e,
   data: e.data && e.data.errors && e.data.errors,
 });
 
-async function hasByFilters(entityService, filters) {
+async function findOneByFilters(entityService, filters) {
   try {
     const serviceEntityName = getServiceEntityName(entityService);
-    const item = await strapi.service(serviceEntityName).find({
+    const entries = await strapi.entityService.findMany(serviceEntityName, {
       filters,
     });
-
-    return item.results.length > 0 ? item.results[0] : null;
+    return entries;
   } catch (error) {
     console.log("createUnique:", Exception(error));
   }
@@ -55,7 +55,7 @@ async function create({
       data,
     });
   } catch (error) {
-    console.log("create:", Exception(error));
+    console.log("create:", serviceName, Exception(error));
   }
 }
 
@@ -66,20 +66,22 @@ async function createUnique({
   filters,
 }) {
   try {
-    const item = await hasByFilters(serviceName, { filters });
-    if (!item) {
+    const results = await findOneByFilters(serviceName, filters);
+    if (results.length === 0) {
       create({ serviceName, dataOriginal, slugOf });
     } else {
       console.log(
         "createUnique:",
+        serviceName,
         Exception({
           message: "item already exists",
-          item,
+          dataOriginal,
+          results,
         })
       );
     }
   } catch (error) {
-    console.log("createUnique:", Exception(error));
+    console.log("createUnique:", serviceName, Exception(error));
   }
 }
 
@@ -88,13 +90,13 @@ type CountryData = {
   slug: string;
 };
 
-async function createCountry(countryData: CountryData) {
+async function createCountry(dataOriginal: CountryData) {
   // return await create(entityServices.country, countryData);
   return await createUnique({
     serviceName: "country",
-    dataOriginal: countryData,
+    dataOriginal,
     filters: {
-      name: countryData.name,
+      ...dataOriginal,
     },
   });
 }
@@ -103,11 +105,14 @@ type StateData = {
   name: string;
 };
 
-async function createState(stateData: StateData) {
-  return await create({
+async function createState(dataOriginal: StateData) {
+  return await createUnique({
     serviceName: "state",
-    dataOriginal: stateData,
+    dataOriginal,
     slugOf: "name",
+    filters: {
+      ...dataOriginal,
+    },
   });
 }
 
@@ -115,11 +120,14 @@ type CityData = {
   name: string;
   state?: string;
 };
-async function createCity(cityData: CityData) {
-  return await create({
+async function createCity(dataOriginal: CityData) {
+  return await createUnique({
     serviceName: "city",
-    dataOriginal: cityData,
+    dataOriginal,
     slugOf: "name",
+    filters: {
+      ...dataOriginal,
+    },
   });
 }
 
@@ -127,11 +135,14 @@ type EventCategoryData = {
   name: string;
   slug?: string;
 };
-async function createEventCategory(eventCategoryData: EventCategoryData) {
-  return await create({
+async function createEventCategory(dataOriginal: EventCategoryData) {
+  return await createUnique({
     serviceName: "event-category",
-    dataOriginal: eventCategoryData,
+    dataOriginal,
     slugOf: "name",
+    filters: {
+      ...dataOriginal,
+    },
   });
 }
 
@@ -139,11 +150,14 @@ type PlaceCategoryData = {
   name: string;
   slug?: string;
 };
-async function createPlaceCategory(placeCategoryData: PlaceCategoryData) {
-  return await create({
-    serviceName: "placeCategory",
-    dataOriginal: placeCategoryData,
+async function createPlaceCategory(dataOriginal: PlaceCategoryData) {
+  return await createUnique({
+    serviceName: "place-category",
+    dataOriginal,
     slugOf: "name",
+    filters: {
+      ...dataOriginal,
+    },
   });
 }
 
@@ -159,11 +173,14 @@ type PlaceData = {
   socialLinks?: any;
 };
 
-async function createPlace(placeData: PlaceData) {
-  return await create({
+async function createPlace(dataOriginal: PlaceData) {
+  return await createUnique({
     serviceName: "place",
-    dataOriginal: placeData,
+    dataOriginal,
     slugOf: "name",
+    filters: {
+      ...dataOriginal,
+    },
   });
 }
 
@@ -175,11 +192,14 @@ type EventData = {
   socialLinks?: any;
   sub_category?: any;
 };
-async function createEvent(eventData: EventData) {
-  return await create({
+async function createEvent(dataOriginal: EventData) {
+  return await createUnique({
     serviceName: "event",
-    dataOriginal: eventData,
+    dataOriginal,
     slugOf: "name",
+    filters: {
+      ...dataOriginal,
+    },
   });
 }
 
@@ -191,34 +211,34 @@ export default factories.createCoreService(
         console.log("SERVICE START");
 
         await createCountry({
-          name: "Brazil",
-          slug: "br",
+          name: "Germany",
+          slug: "de",
         });
 
-        // await createState({
-        //   name: "Minas Gerais",
-        // });
+        await createState({
+          name: "Berlin",
+        });
 
-        // await createCity({
-        //   name: "Belo horizonte",
-        // });
+        await createCity({
+          name: "Berlin",
+        });
 
-        // await createEventCategory({
-        //   name: "Show de rock",
-        // });
+        await createEventCategory({
+          name: "Rave",
+        });
 
-        // await createPlaceCategory({
-        //   name: "centro de exposicoes",
-        // });
+        await createPlaceCategory({
+          name: "Park",
+        });
 
-        // await createPlace({
-        //   name: "boteco do ze",
-        //   shortDescription: "boteco do ze desc",
-        // });
+        await createPlace({
+          name: "Volkspark fried",
+          shortDescription: "boteco do ze desc 3",
+        });
 
-        // await createEvent({
-        //   name: "sho no boteco do ze",
-        // });
+        await createEvent({
+          name: "rtave ilegal",
+        });
         console.log("SERVICE END");
       } catch (error) {
         console.log("populate:", Exception(error));
