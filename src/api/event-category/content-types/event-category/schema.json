@@ -52,7 +52,7 @@
       "type": "relation",
       "relation": "manyToMany",
       "target": "api::event-category.event-category",
-      "inversedBy": "parentCategories"
+      "mappedBy": "parentCategories"
     },
     "events": {
       "type": "relation",
