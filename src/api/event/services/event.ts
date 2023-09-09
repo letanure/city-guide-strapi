@@ -21,9 +21,10 @@ const Exception = (e) => ({
   data: e.data && e.data.errors && e.data.errors,
 });
 
-async function getByFilters(entityService, filters) {
+async function hasByFilters(entityService, filters) {
   try {
-    const item = await strapi.service(entityService).find({
+    const serviceEntityName = getServiceEntityName(entityService);
+    const item = await strapi.service(serviceEntityName).find({
       filters,
     });
 
@@ -58,6 +59,30 @@ async function create({
   }
 }
 
+async function createUnique({
+  serviceName,
+  dataOriginal,
+  slugOf = null,
+  filters,
+}) {
+  try {
+    const item = await hasByFilters(serviceName, { filters });
+    if (!item) {
+      create({ serviceName, dataOriginal, slugOf });
+    } else {
+      console.log(
+        "createUnique:",
+        Exception({
+          message: "item already exists",
+          item,
+        })
+      );
+    }
+  } catch (error) {
+    console.log("createUnique:", Exception(error));
+  }
+}
+
 type CountryData = {
   name: string;
   slug: string;
@@ -65,9 +90,12 @@ type CountryData = {
 
 async function createCountry(countryData: CountryData) {
   // return await create(entityServices.country, countryData);
-  return await create({
+  return await createUnique({
     serviceName: "country",
     dataOriginal: countryData,
+    filters: {
+      name: countryData.name,
+    },
   });
 }
 
@@ -167,30 +195,31 @@ export default factories.createCoreService(
           slug: "br",
         });
 
-        await createState({
-          name: "Minas Gerais",
-        });
+        // await createState({
+        //   name: "Minas Gerais",
+        // });
 
-        await createCity({
-          name: "Belo horizonte",
-        });
+        // await createCity({
+        //   name: "Belo horizonte",
+        // });
 
-        await createEventCategory({
-          name: "Show de rock",
-        });
+        // await createEventCategory({
+        //   name: "Show de rock",
+        // });
 
-        await createPlaceCategory({
-          name: "centro de exposicoes",
-        });
+        // await createPlaceCategory({
+        //   name: "centro de exposicoes",
+        // });
 
-        await createPlace({
-          name: "boteco do ze",
-          shortDescription: "boteco do ze desc",
-        });
+        // await createPlace({
+        //   name: "boteco do ze",
+        //   shortDescription: "boteco do ze desc",
+        // });
 
-        await createEvent({
-          name: "sho no boteco do ze",
-        });
+        // await createEvent({
+        //   name: "sho no boteco do ze",
+        // });
+        console.log("SERVICE END");
       } catch (error) {
         console.log("populate:", Exception(error));
       }
