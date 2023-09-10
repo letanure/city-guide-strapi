@@ -85,6 +85,25 @@
         }
       },
       "component": "basics.social-link"
+    },
+    "rawData": {
+      "pluginOptions": {
+        "i18n": {
+          "localized": false
+        }
+      },
+      "type": "json",
+      "private": true
+    },
+    "properties": {
+      "type": "component",
+      "repeatable": true,
+      "pluginOptions": {
+        "i18n": {
+          "localized": true
+        }
+      },
+      "component": "basics.properties"
     }
   }
 }
