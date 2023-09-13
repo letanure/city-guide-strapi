@@ -5,9 +5,9 @@ const main = async () => {
   console.log("Berlin.de");
   const attractionsAndSightsLinks = await runAttractionsAndSights();
   const dataItems = await runAttractionsAndSightsItem(
-    attractionsAndSightsLinks.slice(0, 2)
+    attractionsAndSightsLinks
   );
-  console.log(dataItems);
+  return dataItems;
 };
 
 export default main;
