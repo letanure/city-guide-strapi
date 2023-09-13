@@ -3,6 +3,7 @@
   "compilerOptions": {
     "outDir": "dist",
     "lib": ["dom", "ESNext"],
+    "allowJs": true,
     "rootDir": "."
   },
   "include": ["./", "./**/*.ts", "./**/*.js", "src/**/*.json"],
@@ -14,6 +15,7 @@
     ".tmp/",
     "src/admin/",
     "**/*.test.*",
+    "storage/",
     "src/plugins/**"
   ]
 }
