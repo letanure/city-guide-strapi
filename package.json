@@ -17,6 +17,8 @@
     "@strapi/plugin-graphql": "^4.13.5",
     "@strapi/plugin-users-permissions": "4.13.6",
     "@strapi/strapi": "4.13.6",
+    "crawlee": "^3.5.4",
+    "openai": "^4.6.0",
     "patch-package": "^8.0.0",
     "pg": "8.11.3",
     "postinstall-postinstall": "^2.1.0",
