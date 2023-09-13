@@ -22,13 +22,12 @@ const main = async (urls) => {
       result = sanitizeText($(item).next("dd").text().trim());
     }
     if (type === "href") {
-      result = $(item).next("dd").attr("href");
+      result = $(item).next("dd").find("a").attr("href");
     }
     return result;
   }
 
   const crawler = await new CheerioCrawler({
-    // maxRequestsPerCrawl: 10,
     async requestHandler({ $, request }) {
       const title = $(".article__title").text();
       const images = $(".article-mainimage img").attr("src")
@@ -87,29 +86,32 @@ const main = async (urls) => {
       );
       const ogImage = $('meta[property="og:image"]').attr("content");
 
-      //   info-container-list
+      // @todo Alternative version
+      // @todo check new items not mapped
+      // info-container-list
+
       const dataItem = {
         source: request.url,
         title,
         geoCoordinates,
-        // ogDescription,
-        // ogImage,
-        // images,
-        // shortDescription,
-        // description,
-        // cityMapUrl,
-        // address,
-        // accessibility,
-        // admission,
-        // guidedTours,
-        // website,
-        // openingHours,
-        // parking,
-        // phone,
-        // note,
-        // rooftop,
-        // tickets,
-        // style,
+        ogDescription,
+        ogImage,
+        images,
+        shortDescription,
+        description,
+        cityMapUrl,
+        address,
+        accessibility,
+        admission,
+        guidedTours,
+        website,
+        openingHours,
+        parking,
+        phone,
+        note,
+        rooftop,
+        tickets,
+        style,
       };
       data = [...data, dataItem];
     },
