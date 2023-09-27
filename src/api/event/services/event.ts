@@ -1,8 +1,7 @@
 /**
  * event service
  */
-import { factories } from "@strapi/strapi";
-import { ContentType } from "@strapi/strapi/lib/types/core/uid";
+import { Common, factories } from "@strapi/strapi";
 import slugify from "slugify";
 import scrapper from "../../../scrapper";
 import openai from "../../../scrapper/openai.js";
@@ -18,7 +17,7 @@ type ServiceOptions =
   | "state";
 
 const getServiceEntityName = (serviceName: ServiceOptions) =>
-  `api::${serviceName}.${serviceName}` as ContentType;
+  `api::${serviceName}.${serviceName}` as Common.UID.ContentType;
 
 const Exception = (e) => ({
   e,
