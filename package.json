@@ -18,7 +18,7 @@
     "@strapi/plugin-users-permissions": "4.14.3",
     "@strapi/strapi": "4.14.3",
     "crawlee": "^3.5.7",
-    "openai": "^4.12.1",
+    "openai": "^4.12.3",
     "patch-package": "^8.0.0",
     "pg": "8.11.3",
     "postinstall-postinstall": "^2.1.0",
